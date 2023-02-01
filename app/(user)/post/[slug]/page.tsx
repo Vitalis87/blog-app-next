@@ -3,7 +3,6 @@ import { client } from "../../../../lib/sanity.client";
 import Image from "next/image";
 import urlFor from "../../../../lib/urlFor";
 import { PortableText } from "@portabletext/react";
-import Link from "next/link";
 import { RichTextComponent } from "../../../../components/RichTextComponent";
 
 type Props = {
@@ -11,6 +10,23 @@ type Props = {
     slug: string;
   };
 };
+
+export const revalidate = 60; //revalidate this page every 60 seconds
+
+export async function generateStaticParams() {
+  const query = groq`
+    *[_type=='post']{
+      slug
+    }
+  `;
+
+  const slugs: Post[] = await client.fetch(query);
+  const slugRoutes = slugs.map((slug) => slug.slug.current);
+
+  return slugRoutes.map((slug) => ({
+    slug,
+  }));
+}
 
 async function Post({ params: { slug } }: Props) {
   const query = groq`
@@ -29,12 +45,12 @@ async function Post({ params: { slug } }: Props) {
       <section className="border border-[#F7AB0A] text-white space-y-2">
         <div className="relative min-h-[56px] flex flex-col md:flex-row justify-between">
           <div className="absolute top-0 w-full h-full opacity-10 blur-sm p-10">
-            <Image
-              src={urlFor(post.mainImage).url()}
-              alt={post.author.name}
-              fill
-              className="object-cover object-center mx-auto"
-            />
+              <Image
+                src={urlFor(post.mainImage).url()}
+                alt={post.author.name}
+                fill
+                className="object-cover object-center mx-auto"
+              />
           </div>
 
           <section className="p-5 bg-[#F7AB0A] w-full">
@@ -51,17 +67,18 @@ async function Post({ params: { slug } }: Props) {
                 </p>
               </div>
               <div className="flex items-center space-x-2">
-                <Image
-                  src={urlFor(post.author.image).url()}
-                  alt={post.author.name}
-                  className="rounded-full"
-                  height={40}
-                  width={40}
-                />
-
+                  <Image
+                    src={urlFor(post.author.image).url()}
+                    alt={post.author.name}
+                    className="rounded-full"
+                    height={40}
+                    width={40}
+                  />
                 <div className="w-64">
                   <h3 className="text-lg font-bold">{post.author.name}</h3>
-                  <p className="text-xs">{post.author.bio[0].children[0].text}</p>
+                  <p className="text-xs">
+                    {post.author.bio[0].children[0].text}
+                  </p>
                 </div>
               </div>
             </div>
@@ -82,20 +99,3 @@ async function Post({ params: { slug } }: Props) {
 }
 
 export default Post;
-
-export const revalidate = 60; //revalidate this page every 60 seconds
-
-export async function generalStaticParams() {
-  const query = groq`
-    *[_type=='post']{
-      slug
-    }
-  `;
-
-  const slugs: Post[] = await client.fetch(query);
-  const slugRoutes = slugs.map((slug) => slug.slug.current);
-
-  return slugRoutes.map((slug) => ({
-    slug,
-  }));
-}
