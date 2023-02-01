@@ -12,7 +12,7 @@ function StudioNavbar(props: any) {
 
         <div className="hidden md:flex p-5 rounded-lg justify-center border-2 border-[#F7AB0A]">
           <h1 className="font-bold text-white">Would you like to see the source code of the project?</h1>
-          <Link href="https://github.com/Hope87" className="text-[#F7AB0A] font-bold ml-2">
+          <Link href="https://github.com/Vitalis87/blog-app-next" className="text-[#F7AB0A] font-bold ml-2">
             Click
           </Link>
         </div>

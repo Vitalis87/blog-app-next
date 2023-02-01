@@ -19,7 +19,7 @@ function Header() {
 
       <div>
         <Link
-          href="https://github.com/Hope87"
+          href="https://github.com/Vitalis87/blog-app-next"
           className="px-5 py-3 text-sm md:text-base bg-gray-900 text-[#F7AB0A] flex items-center rounded-full text-center"
         >
           Sign up to the Source code
